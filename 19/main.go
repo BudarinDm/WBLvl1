@@ -17,10 +17,8 @@ func main() {
 func lineReversal(text string) string {
 	arrRune := []rune(text) //поэтому используем руны , что даст нам уверенность что мы точно будем
 	//обрабатывать значения в юникоде и символы в строке поменяются правильно
-	for i, j := 0, len(arrRune)-1; j >= i; { //просто бежим двумя индексами i j навстречу друг другу
+	for i, j := 0, len(arrRune)-1; j >= i; i, j = i+1, j-1 { //просто бежим двумя индексами i j навстречу друг другу
 		arrRune[i], arrRune[j] = arrRune[j], arrRune[i] //и меняем местами элементы
-		i++
-		j--
 	}
 	return string(arrRune) //конвертим в строку
 }
