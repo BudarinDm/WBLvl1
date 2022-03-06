@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -32,7 +35,12 @@ func main() {
 	//используется длительность времени. Эта функция возвращает производный контекст, который отменяется
 	//при вызове функции отмены или по истечении времени.
 
-	wg.Add(3)
+	done := make(chan os.Signal, 1) //через сигнал , как мы уже делали в 4 задании
+	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
+
+	wg.Add(4)
+
+	go signalChanel(done, &wg)
 	go ctxWithCancel(ctxCansel, &wg)
 	go ctxWithDeadline(ctxDeadline, &wg)
 	go ctxWithTimeout(ctxTimeout, &wg)
@@ -82,6 +90,20 @@ func ctxWithTimeout(ctx context.Context, wg *sync.WaitGroup) {
 		default:
 			time.Sleep(1 * time.Second)
 			fmt.Println("timeout func")
+		}
+	}
+}
+
+func signalChanel(cancelChan <-chan os.Signal, wg *sync.WaitGroup) {
+	for {
+		select {
+		case <-cancelChan:
+			fmt.Println("cancelChan")
+			wg.Done()
+			return
+		default:
+			time.Sleep(1 * time.Second)
+			fmt.Println("cancelChan func")
 		}
 	}
 }
