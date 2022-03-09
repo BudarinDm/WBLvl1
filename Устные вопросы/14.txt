@@ -1,0 +1,26 @@
+Что выведет данная программа и почему?
+
+
+func main() {
+  slice := []string{"a", "a"}
+
+  func(slice []string) {
+     slice = append(slice, "a")
+     slice[0] = "b"
+     slice[1] = "b"
+     fmt.Print(slice)
+  }(slice)
+  fmt.Print(slice)
+}
+
+Вывод: [b b a][a a]
+Почему: нвверное потому что мы не сделали slice = func.....
+и в функции не сделали return slice
+странно что
+ slice[0] = "b"
+ slice[1] = "b"
+ не изменили значение в массиве который лежит в слайсе...
+
+
+
+
